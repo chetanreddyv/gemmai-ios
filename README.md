@@ -124,7 +124,7 @@ User Tap → Microphone Input (STT) + Frame Capture → Multimodal Prompt → Ge
 
 #### 4. Model Configuration
 ```swift
-topK: 0.5          // Deterministic, focused responses for safety
+topK: 20          // Deterministic, focused responses for safety
 topP: 0.8          // Restrictive output distribution
 temperature: 0.5   // Conservative randomness for reliability
 randomSeed: 101    // Reproducible outputs
