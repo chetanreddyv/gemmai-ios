@@ -38,9 +38,9 @@
 
 ## Overview
 
-**GemmA.I** is an iOS app designed for and with the blind and visually impaired community, delivering real-time scene understanding and spoken assistance—**with 100% local, on-device processing**. Your camera data, questions, and results **never leave your device**: there is **no cloud, no internet required, and no compromise on privacy**. Built with accessibility at its core, GemmA.I empowers users to navigate the world independently, securely, and confidently—anywhere, anytime.
+**GemmA.I** is an iOS app designed for and with the blind and visually impaired community, delivering real-time scene understanding and spoken assistance **with 100% local, on-device processing**. Your camera data, questions, and results **never leave your device**: there is **no cloud, no internet required, and no compromise on privacy**. Built with accessibility at its core, GemmA.I empowers users to navigate the world independently, securely, and confidently anywhere, anytime.
 
-- **Runs entirely on CPU:** No GPU or special hardware required—works on a wide range of iOS devices.
+- **Runs entirely on CPU:** No GPU or special hardware required works on a wide range of iOS devices.
 - **4-bit quantized models:** Efficient, fast, and optimized for edge/on-device AI.
 - **Real-time performance:** Sub-second spoken feedback with optimized inference pipeline.
 
