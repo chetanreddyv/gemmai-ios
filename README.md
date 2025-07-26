@@ -49,7 +49,7 @@
 ## Why GemmA.I?
 
 - **Privacy by Design:** All vision and language AI runs entirely on your device. No images, audio, or personal data ever leave your phone.
-- **No Internet Needed:** Works anywhere—on the street, in the subway, or off the grid. No WiFi, no mobile data, no cloud.
+- **No Internet Needed:** Works anywhere on the street, in the subway, or off the grid. No WiFi, no mobile data, no cloud.
 - **Accessible for All:** Built for the blind and visually impaired, with VoiceOver support, clear audio feedback, and a simple, intuitive interface.
 - **Community-Driven:** Developed with feedback from the blind/VI community to ensure real-world usability and impact.
 - **Performance Optimized:** Achieves 2.2-2.3 tokens/sec inference throughput with 4.5-5.6 second first token latency.
@@ -192,7 +192,7 @@ maxTokens: 2048    // Context window for extensibility
 ## The Challenge: Building for Real-World Impact
 
 ### Mission & Vision
-GemmA.I was created to demonstrate how a private, offline-first, multimodal AI model like Gemma 3n can make a tangible difference in people's lives. Our mission: **empower the blind and visually impaired community with real-time, accessible, and private scene understanding—anywhere, anytime, with no internet required.**
+GemmA.I was created to demonstrate how a private, offline-first, multimodal AI model like Gemma 3n can make a tangible difference in people's lives. Our mission: **empower the blind and visually impaired community with real-time, accessible, and private scene understanding anywhere, anytime, with no internet required.**
 
 But the vision is bigger: Gemma 3n enables a new generation of apps that protect privacy, work reliably offline, and serve real needs in accessibility, education, health, crisis response, and beyond.
 
@@ -218,17 +218,17 @@ Globally, over 285 million people live with visual impairments that significantl
 - **User experience:** Making the app intuitive, reliable, and stress-free for users with different abilities
 
 ### Why These Choices Matter
-- **Privacy-first:** No cloud, no leaks—users can trust the app with their most sensitive moments
+- **Privacy-first:** No cloud, no leaks users can trust the app with their most sensitive moments
 - **Offline reliability:** Works in subways, rural areas, or anywhere connectivity is poor
 - **Inclusivity:** Designed for and with the blind/VI community, but the architecture can serve many more
-- **Viral potential:** The same approach can power education, health, crisis response, and sustainability apps—anywhere privacy and offline use matter
+- **Viral potential:** The same approach can power education, health, crisis response, and sustainability apps anywhere privacy and offline use matter
 
 ### Inspiring the Next Generation
 GemmA.I is just the beginning. Imagine:
 - **Education:** Interactive, offline learning for students in low-connectivity regions
 - **Health:** On-device wellness or mental health support, with no data sent to the cloud
 - **Crisis Response:** Tools that provide critical info or translation when networks are down
-- **Sustainability:** Apps that identify plants, track biodiversity, or promote recycling—privately, on-device
+- **Sustainability:** Apps that identify plants, track biodiversity, or promote recycling privately, on-device
 
 
 ---
