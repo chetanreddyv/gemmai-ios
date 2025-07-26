@@ -1,3 +1,39 @@
+## Installation & Setup
+
+### Requirements
+
+- **iOS 15.0+**
+- **Xcode 14.0+**
+- **CocoaPods**
+- **Real iOS device** (required for camera and TTS functionality)
+
+### Steps
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/chetanreddyv/gemmai-ios.git
+   cd gemmai-ios
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pod install
+   ```
+
+3. **Open the workspace in Xcode:**
+   ```bash
+   open GemmA.I.xcworkspace
+   ```
+
+4. **Download the Gemma 3N 2B model:**
+   - Download `gemma-3n-E2B-it-int4.task` from [HuggingFace](https://huggingface.co/google/gemma-3n-E2B-it-litert-preview/tree/main)
+   - Place the file in the `GemmA/` folder
+   - **Note:** This file is ~2.9GB and is excluded from the repository
+
+5. **Build and run** on your iOS device (real device required for camera and TTS)
+
+---
+
 # GemmA.I – On-Device Vision Assistance for the Blind
 
 ## Overview
@@ -194,43 +230,6 @@ GemmA.I is just the beginning. Imagine:
 - **Crisis Response:** Tools that provide critical info or translation when networks are down
 - **Sustainability:** Apps that identify plants, track biodiversity, or promote recycling—privately, on-device
 
-**We invite the community to build more impactful, private, and accessible tools using Gemma 3n and similar edge AI technologies.**
-
----
-
-## Installation & Setup
-
-### Requirements
-
-- **iOS 15.0+**
-- **Xcode 14.0+**
-- **CocoaPods**
-- **Real iOS device** (required for camera and TTS functionality)
-
-### Steps
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/chetanreddyv/gemmai-ios.git
-   cd gemmai-ios
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   pod install
-   ```
-
-3. **Open the workspace in Xcode:**
-   ```bash
-   open GemmA.I.xcworkspace
-   ```
-
-4. **Download the Gemma 3N 2B model:**
-   - Download `gemma-3n-E2B-it-int4.task` from [HuggingFace](https://huggingface.co/google/gemma-3n-E2B-it-litert-preview/tree/main)
-   - Place the file in the `GemmA/` folder
-   - **Note:** This file is ~2.9GB and is excluded from the repository
-
-5. **Build and run** on your iOS device (real device required for camera and TTS)
 
 ---
 
