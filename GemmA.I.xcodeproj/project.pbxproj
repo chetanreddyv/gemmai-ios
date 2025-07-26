@@ -1,0 +1,734 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		28F8BED5241283423DC5BF99 /* Pods_GemmA_I_GemmA_IUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CB8B4BF9DB1DA365CFD28F5 /* Pods_GemmA_I_GemmA_IUITests.framework */; };
+		612199042E2AABE00099BE98 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612198D62E2AAB9F0099BE98 /* CameraManager.swift */; };
+		612199052E2AABED0099BE98 /* thinking.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 612198DE2E2AAB9F0099BE98 /* thinking.mp3 */; };
+		612199072E2AABED0099BE98 /* gemma-3n-E2B-it-int4.task in Resources */ = {isa = PBXBuildFile; fileRef = 612198D82E2AAB9F0099BE98 /* gemma-3n-E2B-it-int4.task */; };
+		612199082E2AABED0099BE98 /* VisionProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612198E12E2AAB9F0099BE98 /* VisionProcessor.swift */; };
+		612199092E2AABED0099BE98 /* VisionAssistanceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612198E02E2AAB9F0099BE98 /* VisionAssistanceViewModel.swift */; };
+		6121990A2E2AABED0099BE98 /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612198DD2E2AAB9F0099BE98 /* SpeechManager.swift */; };
+		6121990B2E2AABED0099BE98 /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612198D72E2AAB9F0099BE98 /* CameraPreviewView.swift */; };
+		6121990C2E2AABED0099BE98 /* GemmA.I.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612198DA2E2AAB9F0099BE98 /* GemmA.I.swift */; };
+		6121990D2E2AABED0099BE98 /* VisionAssistanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612198DF2E2AAB9F0099BE98 /* VisionAssistanceView.swift */; };
+		6121990E2E2AABED0099BE98 /* LlmInference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612198DC2E2AAB9F0099BE98 /* LlmInference.swift */; };
+		6121990F2E2AACB10099BE98 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 612198D52E2AAB9F0099BE98 /* Assets.xcassets */; };
+		7CD300412DE5062000B81C16 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 7CD300402DE5062000B81C16 /* ZIPFoundation */; };
+		B115382CF72F9322B08574F5 /* Pods_GemmA_I.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 591ABF07DBFE643AF2DA4517 /* Pods_GemmA_I.framework */; };
+		E8053D41286A951806FC3498 /* Pods_GemmA_ITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7405339F82D4FB8AA04A4937 /* Pods_GemmA_ITests.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1F965E232DE0001D00D7F580 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F965E0D2DE0001C00D7F580 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1F965E142DE0001C00D7F580;
+			remoteInfo = "GemmA.I";
+		};
+		1F965E2D2DE0001D00D7F580 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F965E0D2DE0001C00D7F580 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1F965E142DE0001C00D7F580;
+			remoteInfo = "GemmA.I";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		02007509F143F88D3526D3D6 /* Pods-GemmA.I-GemmA.IUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GemmA.I-GemmA.IUITests.release.xcconfig"; path = "Target Support Files/Pods-GemmA.I-GemmA.IUITests/Pods-GemmA.I-GemmA.IUITests.release.xcconfig"; sourceTree = "<group>"; };
+		0BB6346E33A40257E0FEBF4E /* Pods-GemmA.ITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GemmA.ITests.debug.xcconfig"; path = "Target Support Files/Pods-GemmA.ITests/Pods-GemmA.ITests.debug.xcconfig"; sourceTree = "<group>"; };
+		1F965E152DE0001C00D7F580 /* GemmA.I.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GemmA.I.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F965E222DE0001D00D7F580 /* GemmA.ITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GemmA.ITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F965E2C2DE0001D00D7F580 /* GemmA.IUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GemmA.IUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A356213D3C8A039E4260CEB /* Pods-GemmA.I-GemmA.IUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GemmA.I-GemmA.IUITests.debug.xcconfig"; path = "Target Support Files/Pods-GemmA.I-GemmA.IUITests/Pods-GemmA.I-GemmA.IUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		4B27BAF6EE603D39FB2DEB01 /* Pods-GemmA.ITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GemmA.ITests.release.xcconfig"; path = "Target Support Files/Pods-GemmA.ITests/Pods-GemmA.ITests.release.xcconfig"; sourceTree = "<group>"; };
+		591ABF07DBFE643AF2DA4517 /* Pods_GemmA_I.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GemmA_I.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CB8B4BF9DB1DA365CFD28F5 /* Pods_GemmA_I_GemmA_IUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GemmA_I_GemmA_IUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		612198D52E2AAB9F0099BE98 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		612198D62E2AAB9F0099BE98 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
+		612198D72E2AAB9F0099BE98 /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
+		612198D82E2AAB9F0099BE98 /* gemma-3n-E2B-it-int4.task */ = {isa = PBXFileReference; lastKnownFileType = file; path = "gemma-3n-E2B-it-int4.task"; sourceTree = "<group>"; };
+		612198D92E2AAB9F0099BE98 /* GemmA.I.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GemmA.I.entitlements; sourceTree = "<group>"; };
+		612198DA2E2AAB9F0099BE98 /* GemmA.I.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GemmA.I.swift; sourceTree = "<group>"; };
+		612198DC2E2AAB9F0099BE98 /* LlmInference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlmInference.swift; sourceTree = "<group>"; };
+		612198DD2E2AAB9F0099BE98 /* SpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
+		612198DE2E2AAB9F0099BE98 /* thinking.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = thinking.mp3; sourceTree = "<group>"; };
+		612198DF2E2AAB9F0099BE98 /* VisionAssistanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionAssistanceView.swift; sourceTree = "<group>"; };
+		612198E02E2AAB9F0099BE98 /* VisionAssistanceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionAssistanceViewModel.swift; sourceTree = "<group>"; };
+		612198E12E2AAB9F0099BE98 /* VisionProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionProcessor.swift; sourceTree = "<group>"; };
+		612199102E2AB03A0099BE98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7405339F82D4FB8AA04A4937 /* Pods_GemmA_ITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GemmA_ITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9308238061EA851E386AC5B2 /* Pods-GemmA.I.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GemmA.I.debug.xcconfig"; path = "Target Support Files/Pods-GemmA.I/Pods-GemmA.I.debug.xcconfig"; sourceTree = "<group>"; };
+		E5865BBACDFED15AD2E464D2 /* Pods-GemmA.I.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GemmA.I.release.xcconfig"; path = "Target Support Files/Pods-GemmA.I/Pods-GemmA.I.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1F965E122DE0001C00D7F580 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7CD300412DE5062000B81C16 /* ZIPFoundation in Frameworks */,
+				B115382CF72F9322B08574F5 /* Pods_GemmA_I.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F965E1F2DE0001D00D7F580 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E8053D41286A951806FC3498 /* Pods_GemmA_ITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F965E292DE0001D00D7F580 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28F8BED5241283423DC5BF99 /* Pods_GemmA_I_GemmA_IUITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1F965E0C2DE0001C00D7F580 = {
+			isa = PBXGroup;
+			children = (
+				612198E22E2AAB9F0099BE98 /* GemmA */,
+				1F965E162DE0001C00D7F580 /* Products */,
+				6E22B065DEAA6F51442843ED /* Pods */,
+				FD30C62F70A2B7BC7A3E748E /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		1F965E162DE0001C00D7F580 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1F965E152DE0001C00D7F580 /* GemmA.I.app */,
+				1F965E222DE0001D00D7F580 /* GemmA.ITests.xctest */,
+				1F965E2C2DE0001D00D7F580 /* GemmA.IUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		612198E22E2AAB9F0099BE98 /* GemmA */ = {
+			isa = PBXGroup;
+			children = (
+				612199102E2AB03A0099BE98 /* Info.plist */,
+				612198D52E2AAB9F0099BE98 /* Assets.xcassets */,
+				612198D62E2AAB9F0099BE98 /* CameraManager.swift */,
+				612198D72E2AAB9F0099BE98 /* CameraPreviewView.swift */,
+				612198D82E2AAB9F0099BE98 /* gemma-3n-E2B-it-int4.task */,
+				612198D92E2AAB9F0099BE98 /* GemmA.I.entitlements */,
+				612198DA2E2AAB9F0099BE98 /* GemmA.I.swift */,
+				612198DC2E2AAB9F0099BE98 /* LlmInference.swift */,
+				612198DD2E2AAB9F0099BE98 /* SpeechManager.swift */,
+				612198DE2E2AAB9F0099BE98 /* thinking.mp3 */,
+				612198DF2E2AAB9F0099BE98 /* VisionAssistanceView.swift */,
+				612198E02E2AAB9F0099BE98 /* VisionAssistanceViewModel.swift */,
+				612198E12E2AAB9F0099BE98 /* VisionProcessor.swift */,
+			);
+			path = GemmA;
+			sourceTree = "<group>";
+		};
+		6E22B065DEAA6F51442843ED /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9308238061EA851E386AC5B2 /* Pods-GemmA.I.debug.xcconfig */,
+				E5865BBACDFED15AD2E464D2 /* Pods-GemmA.I.release.xcconfig */,
+				4A356213D3C8A039E4260CEB /* Pods-GemmA.I-GemmA.IUITests.debug.xcconfig */,
+				02007509F143F88D3526D3D6 /* Pods-GemmA.I-GemmA.IUITests.release.xcconfig */,
+				0BB6346E33A40257E0FEBF4E /* Pods-GemmA.ITests.debug.xcconfig */,
+				4B27BAF6EE603D39FB2DEB01 /* Pods-GemmA.ITests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		FD30C62F70A2B7BC7A3E748E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				591ABF07DBFE643AF2DA4517 /* Pods_GemmA_I.framework */,
+				5CB8B4BF9DB1DA365CFD28F5 /* Pods_GemmA_I_GemmA_IUITests.framework */,
+				7405339F82D4FB8AA04A4937 /* Pods_GemmA_ITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1F965E142DE0001C00D7F580 /* GemmA.I */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F965E362DE0001D00D7F580 /* Build configuration list for PBXNativeTarget "GemmA.I" */;
+			buildPhases = (
+				5E79111E0C382AC74A540068 /* [CP] Check Pods Manifest.lock */,
+				1F965E112DE0001C00D7F580 /* Sources */,
+				1F965E122DE0001C00D7F580 /* Frameworks */,
+				1F965E132DE0001C00D7F580 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GemmA.I;
+			productName = "GemmA.I";
+			productReference = 1F965E152DE0001C00D7F580 /* GemmA.I.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1F965E212DE0001D00D7F580 /* GemmA.ITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F965E392DE0001D00D7F580 /* Build configuration list for PBXNativeTarget "GemmA.ITests" */;
+			buildPhases = (
+				63571FAD3F6B26087CAE4A55 /* [CP] Check Pods Manifest.lock */,
+				1F965E1E2DE0001D00D7F580 /* Sources */,
+				1F965E1F2DE0001D00D7F580 /* Frameworks */,
+				1F965E202DE0001D00D7F580 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1F965E242DE0001D00D7F580 /* PBXTargetDependency */,
+			);
+			name = GemmA.ITests;
+			productName = "GemmA.ITests";
+			productReference = 1F965E222DE0001D00D7F580 /* GemmA.ITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		1F965E2B2DE0001D00D7F580 /* GemmA.IUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F965E3C2DE0001D00D7F580 /* Build configuration list for PBXNativeTarget "GemmA.IUITests" */;
+			buildPhases = (
+				903DD2E1AF03B8F5C9BD1988 /* [CP] Check Pods Manifest.lock */,
+				1F965E282DE0001D00D7F580 /* Sources */,
+				1F965E292DE0001D00D7F580 /* Frameworks */,
+				1F965E2A2DE0001D00D7F580 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1F965E2E2DE0001D00D7F580 /* PBXTargetDependency */,
+			);
+			name = GemmA.IUITests;
+			productName = "GemmA.IUITests";
+			productReference = 1F965E2C2DE0001D00D7F580 /* GemmA.IUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1F965E0D2DE0001C00D7F580 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1630;
+				LastUpgradeCheck = 1630;
+				TargetAttributes = {
+					1F965E142DE0001C00D7F580 = {
+						CreatedOnToolsVersion = 16.3;
+					};
+					1F965E212DE0001D00D7F580 = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = 1F965E142DE0001C00D7F580;
+					};
+					1F965E2B2DE0001D00D7F580 = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = 1F965E142DE0001C00D7F580;
+					};
+				};
+			};
+			buildConfigurationList = 1F965E102DE0001C00D7F580 /* Build configuration list for PBXProject "GemmA.I" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1F965E0C2DE0001C00D7F580;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7CD3003F2DE5062000B81C16 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 1F965E162DE0001C00D7F580 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1F965E142DE0001C00D7F580 /* GemmA.I */,
+				1F965E212DE0001D00D7F580 /* GemmA.ITests */,
+				1F965E2B2DE0001D00D7F580 /* GemmA.IUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1F965E132DE0001C00D7F580 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				612199052E2AABED0099BE98 /* thinking.mp3 in Resources */,
+				6121990F2E2AACB10099BE98 /* Assets.xcassets in Resources */,
+				612199072E2AABED0099BE98 /* gemma-3n-E2B-it-int4.task in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F965E202DE0001D00D7F580 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F965E2A2DE0001D00D7F580 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5E79111E0C382AC74A540068 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GemmA.I-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		63571FAD3F6B26087CAE4A55 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GemmA.ITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		903DD2E1AF03B8F5C9BD1988 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GemmA.I-GemmA.IUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1F965E112DE0001C00D7F580 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				612199082E2AABED0099BE98 /* VisionProcessor.swift in Sources */,
+				612199092E2AABED0099BE98 /* VisionAssistanceViewModel.swift in Sources */,
+				6121990A2E2AABED0099BE98 /* SpeechManager.swift in Sources */,
+				6121990B2E2AABED0099BE98 /* CameraPreviewView.swift in Sources */,
+				6121990C2E2AABED0099BE98 /* GemmA.I.swift in Sources */,
+				6121990D2E2AABED0099BE98 /* VisionAssistanceView.swift in Sources */,
+				6121990E2E2AABED0099BE98 /* LlmInference.swift in Sources */,
+				612199042E2AABE00099BE98 /* CameraManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F965E1E2DE0001D00D7F580 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F965E282DE0001D00D7F580 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1F965E242DE0001D00D7F580 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1F965E142DE0001C00D7F580 /* GemmA.I */;
+			targetProxy = 1F965E232DE0001D00D7F580 /* PBXContainerItemProxy */;
+		};
+		1F965E2E2DE0001D00D7F580 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1F965E142DE0001C00D7F580 /* GemmA.I */;
+			targetProxy = 1F965E2D2DE0001D00D7F580 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1F965E342DE0001D00D7F580 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1F965E352DE0001D00D7F580 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1F965E372DE0001D00D7F580 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9308238061EA851E386AC5B2 /* Pods-GemmA.I.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GemmA/GemmA.I.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3U33M3T65F;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GemmA/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSCameraUsageDescription = Yes;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = Yes;
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chetanreddy.GemmA;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1F965E382DE0001D00D7F580 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E5865BBACDFED15AD2E464D2 /* Pods-GemmA.I.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GemmA/GemmA.I.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3U33M3T65F;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GemmA/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSCameraUsageDescription = Yes;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = Yes;
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chetanreddy.GemmA;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		1F965E3A2DE0001D00D7F580 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0BB6346E33A40257E0FEBF4E /* Pods-GemmA.ITests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chetanreddy.GemmA.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GemmA.I.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GemmA.I";
+			};
+			name = Debug;
+		};
+		1F965E3B2DE0001D00D7F580 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4B27BAF6EE603D39FB2DEB01 /* Pods-GemmA.ITests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chetanreddy.GemmA.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GemmA.I.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GemmA.I";
+			};
+			name = Release;
+		};
+		1F965E3D2DE0001D00D7F580 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4A356213D3C8A039E4260CEB /* Pods-GemmA.I-GemmA.IUITests.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chetanreddy.GemmA.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "GemmA.I";
+			};
+			name = Debug;
+		};
+		1F965E3E2DE0001D00D7F580 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 02007509F143F88D3526D3D6 /* Pods-GemmA.I-GemmA.IUITests.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chetanreddy.GemmA.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "GemmA.I";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1F965E102DE0001C00D7F580 /* Build configuration list for PBXProject "GemmA.I" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F965E342DE0001D00D7F580 /* Debug */,
+				1F965E352DE0001D00D7F580 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1F965E362DE0001D00D7F580 /* Build configuration list for PBXNativeTarget "GemmA.I" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F965E372DE0001D00D7F580 /* Debug */,
+				1F965E382DE0001D00D7F580 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1F965E392DE0001D00D7F580 /* Build configuration list for PBXNativeTarget "GemmA.ITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F965E3A2DE0001D00D7F580 /* Debug */,
+				1F965E3B2DE0001D00D7F580 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1F965E3C2DE0001D00D7F580 /* Build configuration list for PBXNativeTarget "GemmA.IUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F965E3D2DE0001D00D7F580 /* Debug */,
+				1F965E3E2DE0001D00D7F580 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7CD3003F2DE5062000B81C16 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7CD300402DE5062000B81C16 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CD3003F2DE5062000B81C16 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 1F965E0D2DE0001C00D7F580 /* Project object */;
+}
