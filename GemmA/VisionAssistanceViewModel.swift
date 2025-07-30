@@ -2,12 +2,28 @@ import Foundation
 import SwiftUI
 import AVFoundation
 import CoreImage
-import Metal
 
 // MARK: - Constants
 struct ImageQualityThresholds {
-    static let sharpness: Double = 10.0
+    static let sharpness: Double = 15.0  // Minimum sharpness for capture AND processing
     static let brightness: Double = 0.15
+    static let motionBlurThreshold: Double = 25.0  // Higher threshold for motion blur detection
+    static let minimumSharpness: Double = 15.0  // Match sharpness threshold
+}
+
+// MARK: - Motion Detection
+struct MotionQualityMetrics {
+    let sharpness: Double
+    let brightness: Double
+    let isMotionBlur: Bool
+    let isStable: Bool
+    
+    init(sharpness: Double, brightness: Double) {
+        self.sharpness = sharpness
+        self.brightness = brightness
+        self.isMotionBlur = sharpness < ImageQualityThresholds.motionBlurThreshold
+        self.isStable = sharpness > ImageQualityThresholds.minimumSharpness
+    }
 }
 
 enum SessionState {
@@ -28,10 +44,7 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
     @Published var isVisionActive = false
     @Published var currentAlert: String? {
         didSet {
-            if let text = currentAlert, 
-               text.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("CLEAR") != .orderedSame {
-                // TTS is handled by speakStreaming method
-            }
+            // TTS is handled by speakStreaming method
         }
     }
     @Published var criticalError: String?
@@ -51,14 +64,19 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
     private var lastInferredFrameHash: Int? = nil
     private let inferenceTimeout: TimeInterval = 15.0
     private var inferenceWatchdog: Timer?
-    private var frameBuffer: [(image: UIImage, variance: Double, brightness: Double, hash: Int, phash: UInt64)] = []
-    private let bufferSize = 4
+    private var frameBuffer: [(image: UIImage, variance: Double, brightness: Double, hash: Int, phash: UInt64, metrics: MotionQualityMetrics)] = []
+    private let bufferSize = 4  // 4 frames per second as requested
     private var bufferTimer: Timer?
     
     // Scene change detection
     private var lastDescribedScenePHash: UInt64? = nil
     private let sceneChangeThreshold: Int = 10
     private var isInSceneChangeState: Bool = false
+    
+    // Motion detection
+    private var recentFrameHashes: [Int] = []
+    private let maxRecentHashes = 5
+    private var isHighMotion: Bool = false
     
     // MARK: - Task Management
     private var passivePaused: Bool = false
@@ -88,6 +106,14 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
     private let maxPromptLength = 512
     private let minImageSize = CGSize(width: 100, height: 100)
     
+    // MARK: - Debug and Logging
+    private var lastInferenceStartTime: Date?
+    private var inferenceTimeoutTimer: Timer?
+    
+    // MARK: - Mode Management
+    private var currentMode: Mode = .passive
+    private var isModeBusy: Bool = false
+    
     init() {
         Task {
             await initializeVisionSystem()
@@ -106,9 +132,6 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
             onDeviceModel = try OnDeviceModel()
             
             chat = try Chat(model: onDeviceModel!, 
-                          topK: 20, 
-                          topP: 0.8, 
-                          temperature: 0.5, 
                           enableVisionModality: true)
             
             visionProcessor = VisionProcessor(chat: chat!)
@@ -157,7 +180,7 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
         
         if sessionState == .ready {
             if let activeReq = pendingActiveRequest {
-                try? await Task.sleep(nanoseconds: 100_000_000)
+                try? await Task.sleep(nanoseconds: 200_000_000)
                 runActiveInferenceInternal(prompt: activeReq.prompt ?? "", image: activeReq.image, retryingAfterReset: true)
                 pendingActiveRequest = nil
             } else {
@@ -240,7 +263,16 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
     }
     
     // MARK: - Camera Management
+    private var lastFrameCaptureTime: Date?
+    private let frameCaptureDelay: TimeInterval = 1.0  // 1 second delay between frame captures
+    
     func cameraManager(_ manager: CameraManager, didOutputFrame image: UIImage) {
+        // Add delay to frame capturing for stability
+        if let lastCapture = lastFrameCaptureTime,
+           Date().timeIntervalSince(lastCapture) < frameCaptureDelay {
+            return  // Skip this frame, wait for delay
+        }
+        
         let correctedImage = image.fixedOrientation()
         let variance = correctedImage.laplacianVariance()
         let brightness = correctedImage.meanBrightness()
@@ -261,28 +293,34 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
             return
         }
         
-        // Scene change detection for passive mode
-        if mode == .passive {
-            if let lastScenePHash = lastDescribedScenePHash {
-                let hamming = hammingDistance(phash, lastScenePHash)
-                if hamming < sceneChangeThreshold {
-                    return
-                } else {
-                    isInSceneChangeState = true
-                }
-            }
+        // Add frame to buffer (scene change detection moved to buffer processing)
+        let metrics = MotionQualityMetrics(sharpness: variance, brightness: brightness)
+        frameBuffer.append((correctedImage, variance, brightness, hash, phash, metrics))
+        lastFrameCaptureTime = Date()  // Update capture time
+        
+        // Track motion by monitoring frame hash changes
+        recentFrameHashes.append(hash)
+        if recentFrameHashes.count > maxRecentHashes {
+            recentFrameHashes.removeFirst()
         }
         
-        frameBuffer.append((correctedImage, variance, brightness, hash, phash))
+        // Detect high motion if we have multiple different hashes recently
+        let uniqueHashes = Set(recentFrameHashes)
+        isHighMotion = uniqueHashes.count >= 3
+        
+        print("🔍 ViewModel: Frame added - Sharpness: \(variance), Motion blur: \(metrics.isMotionBlur), Stable: \(metrics.isStable), High motion: \(isHighMotion)")
+        
+        // Keep buffer size limited - keep last 4 frames instead of first 4
         if frameBuffer.count > bufferSize {
-            frameBuffer.removeFirst()
+            frameBuffer.removeFirst()  // Remove oldest frame, keep newest 4
         }
     }
     
     // MARK: - Passive Mode Processing
     private func startBufferTimer() {
         bufferTimer?.invalidate()
-        bufferTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        let interval = frameCaptureDelay  // Match the frame capture delay (1.0s)
+        bufferTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
             self?.processFrameBuffer()
             self?.processInferenceQueue()
             self?.checkForStuckBusyState()
@@ -294,60 +332,114 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
             frameBuffer.removeAll()
             return 
         }
-        guard !isInferenceRunning, !frameBuffer.isEmpty else { 
-            frameBuffer.removeAll()
+        guard !isInferenceRunning else { 
+            return 
+        }
+        guard !frameBuffer.isEmpty else { 
             return 
         }
         
+        print("🔍 ViewModel: Processing frame buffer, size: \(frameBuffer.count)")
+        
+        // Scene change detection at buffer processing level
+        if mode == .passive {
+            let latestFrame = frameBuffer.last
+            if let latestPHash = latestFrame?.phash, let lastScenePHash = lastDescribedScenePHash {
+                let hamming = hammingDistance(latestPHash, lastScenePHash)
+                if hamming >= sceneChangeThreshold {
+                    print("🔍 ViewModel: Scene change detected (hamming: \(hamming) >= \(sceneChangeThreshold))")
+                    isInSceneChangeState = true
+                } else {
+                    print("🔍 ViewModel: Similar scene (hamming: \(hamming) < \(sceneChangeThreshold))")
+                }
+            }
+        }
+        
         let filtered = frameBuffer.filter { 
-            $0.variance > ImageQualityThresholds.sharpness && 
+            $0.metrics.isStable && 
             $0.brightness > ImageQualityThresholds.brightness 
         }
         
-        let candidate: (image: UIImage, variance: Double, brightness: Double, hash: Int, phash: UInt64)?
+        print("🔍 ViewModel: Filtered frames: \(filtered.count)/\(frameBuffer.count)")
         
-        if isInSceneChangeState {
-            candidate = filtered.last ?? frameBuffer.last
+        // If no frames pass quality filter, use the best available
+        let candidate: (image: UIImage, variance: Double, brightness: Double, hash: Int, phash: UInt64, metrics: MotionQualityMetrics)?
+        
+        if filtered.isEmpty {
+            print("⚠️ ViewModel: No frames passed quality filter, using best available")
+            candidate = frameBuffer.max(by: { $0.variance < $1.variance })
+        } else if isInSceneChangeState {
+            // During scene change, prefer the most recent stable frame
+            candidate = filtered.last ?? frameBuffer.filter { $0.metrics.isStable }.last ?? frameBuffer.last
+            print("🔍 ViewModel: Scene change detected, using last stable frame")
         } else {
-            candidate = filtered.max(by: { $0.variance < $1.variance }) ?? 
-                       frameBuffer.max(by: { $0.variance < $1.variance })
+            // For similar scenes, prefer the most recent frame to avoid processing old data
+            candidate = filtered.last ?? frameBuffer.last
+            print("🔍 ViewModel: Similar scene, using most recent frame")
         }
         
+        // Clear buffer before processing to prevent accumulation
         frameBuffer.removeAll()
+        
         guard let selectedFrame = candidate else {
+            print("❌ ViewModel: No candidate frame found")
             return
         }
         
         if let lastHash = lastInferredFrameHash, lastHash == selectedFrame.hash {
+            print("🔍 ViewModel: Rejecting duplicate frame (hash: \(selectedFrame.hash))")
             return
         }
         
         if isInSceneChangeState {
             isInSceneChangeState = false
+            print("🔍 ViewModel: Resetting scene change state")
         }
         
         lastInferredFrameHash = selectedFrame.hash
+        print("✅ ViewModel: Selected frame for inference, hash: \(selectedFrame.hash)")
+        print("📊 ViewModel: Frame metrics - Sharpness: \(selectedFrame.metrics.sharpness), Motion blur: \(selectedFrame.metrics.isMotionBlur), Stable: \(selectedFrame.metrics.isStable)")
         runPassiveInference(on: selectedFrame.image, phash: selectedFrame.phash)
     }
     
     private func runPassiveInference(on image: UIImage, phash: UInt64? = nil) {
+        // Check if we can run passive mode
+        guard currentMode == .passive && !isModeBusy else {
+            print("⚠️ ViewModel: Cannot run passive inference - current mode: \(currentMode), mode busy: \(isModeBusy)")
+            pendingInferenceQueue.append(InferenceRequest(prompt: nil, image: image, isActive: false))
+            return
+        }
+        
         if sessionState != .ready || isInferenceRunning {
+            print("⚠️ ViewModel: Cannot start inference - session: \(sessionState), running: \(isInferenceRunning)")
             pendingInferenceQueue.append(InferenceRequest(prompt: nil, image: image, isActive: false))
             return
         }
         
         let imageValidation = validateImage(image)
         if !imageValidation.isValid {
+            print("❌ ViewModel: Image validation failed: \(imageValidation.error ?? "unknown")")
             return
         }
         
+        let imageHash = image.fastHash()
+        print("🔍 ViewModel: Starting passive inference for image hash: \(imageHash)")
+        
+        isModeBusy = true
         isInferenceRunning = true
         sessionState = .busy
+        lastInferenceStartTime = Date()
         checkForStuckBusyState()
+        
+        // Start timeout timer
+        startInferenceTimeout()
         
         Task {
             await withTaskCancellationHandler {
                 await withCheckedContinuation { continuation in
+                    var hasReceivedAnyOutput = false
+                    var finalOutput = ""
+                    
                     visionProcessor?.processFramesStreaming([image]) { [weak self] partialText, isFinal in
                         DispatchQueue.main.async {
                             guard let self = self else { return }
@@ -356,21 +448,40 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
                                 self.isInferenceRunning = false
                                 self.sessionState = .ready
                                 self.checkForStuckBusyState()
+                                self.stopInferenceTimeout()
+                                self.isModeBusy = false  // Reset mode busy flag
                                 self.handleSessionError(NSError(domain: "VisionProcessor", code: -1, userInfo: [NSLocalizedDescriptionKey: partialText]))
                                 continuation.resume()
                                 return
                             }
                             
-                            if self.mode == .passive, 
-                               partialText.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("CLEAR") != .orderedSame {
+                            // Track if we've received any meaningful output
+                            let trimmedText = partialText.trimmingCharacters(in: .whitespacesAndNewlines)
+                            if !trimmedText.isEmpty {
+                                hasReceivedAnyOutput = true
+                                finalOutput = partialText
+                            }
+                            
+                            if self.mode == .passive {
                                 self.currentAlert = partialText
                                 SpeechManager.shared.speakStreaming(partialText, isFinal: isFinal)
                             }
                             
                             if isFinal {
+                                // Check if we got no meaningful output
+                                if !hasReceivedAnyOutput {
+                                    self.currentAlert = "No response generated"
+                                    SpeechManager.shared.speak("No response generated")
+                                }
+                                
+                                print("✅ ViewModel: Passive inference completed, response: '\(finalOutput)'")
+                                print("🔍 ViewModel: Image hash: \(imageHash)")
+                                
                                 self.isInferenceRunning = false
                                 self.sessionState = .ready
                                 self.checkForStuckBusyState()
+                                self.stopInferenceTimeout()
+                                self.isModeBusy = false  // Reset mode busy flag
                                 if let phash = phash {
                                     self.lastDescribedScenePHash = phash
                                 }
@@ -380,15 +491,17 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
                         }
                     }
                 }
-            } onCancel: {
-                DispatchQueue.main.async {
-                    [weak self] in
-                    guard let self = self else { return }
-                    self.isInferenceRunning = false
-                    self.sessionState = .ready
-                    self.checkForStuckBusyState()
+                            } onCancel: {
+                    DispatchQueue.main.async {
+                        [weak self] in
+                        guard let self = self else { return }
+                        self.isInferenceRunning = false
+                        self.sessionState = .ready
+                        self.checkForStuckBusyState()
+                        self.stopInferenceTimeout()
+                        self.isModeBusy = false  // Reset mode busy flag
+                    }
                 }
-            }
         }
     }
     
@@ -434,6 +547,14 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
     }
     
     private func runActiveInferenceInternal(prompt: String, image: UIImage, retryingAfterReset: Bool = false) {
+        // Check if we can run active mode
+        guard !isModeBusy else {
+            print("⚠️ ViewModel: Cannot run active inference - mode is busy")
+            currentAlert = "System busy, please wait"
+            finishActiveMode()
+            return
+        }
+        
         let imageValidation = validateImage(image)
         if !imageValidation.isValid {
             currentAlert = "Invalid image: \(imageValidation.error ?? "unknown error")"
@@ -459,10 +580,15 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
             return
         }
         
+        isModeBusy = true
         isInferenceRunning = true
         sessionState = .busy
+        lastInferenceStartTime = Date()
         checkForStuckBusyState()
         mode = .activeBusy
+        
+        // Start timeout timer
+        startInferenceTimeout()
         
         guard let visionProcessor = self.visionProcessor else {
             currentAlert = "Model not ready"
@@ -476,6 +602,9 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
         Task {
             await withTaskCancellationHandler {
                 await withCheckedContinuation { continuation in
+                    var hasReceivedAnyOutput = false
+                    var finalOutput = ""
+                    
                     visionProcessor.processFramesStreaming([image], prompt: fullPrompt) { [weak self] partialText, isFinal in
                         DispatchQueue.main.async {
                             guard let self = self else { return }
@@ -484,22 +613,38 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
                                 self.isInferenceRunning = false
                                 self.sessionState = .ready
                                 self.checkForStuckBusyState()
+                                self.stopInferenceTimeout()
+                                self.isModeBusy = false  // Reset mode busy flag
                                 self.handleSessionError(NSError(domain: "VisionProcessor", code: -1, userInfo: [NSLocalizedDescriptionKey: partialText]))
                                 self.finishActiveMode()
                                 continuation.resume()
                                 return
                             }
                             
-                            if self.mode == .activeBusy, 
-                               partialText.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("CLEAR") != .orderedSame {
+                            // Track if we've received any meaningful output
+                            let trimmedText = partialText.trimmingCharacters(in: .whitespacesAndNewlines)
+                            if !trimmedText.isEmpty {
+                                hasReceivedAnyOutput = true
+                                finalOutput = partialText
+                            }
+                            
+                            if self.mode == .activeBusy {
                                 self.currentAlert = partialText
                                 SpeechManager.shared.speakStreaming(partialText, isFinal: isFinal)
                             }
                             
                             if isFinal {
+                                // Check if we got no meaningful output
+                                if !hasReceivedAnyOutput {
+                                    self.currentAlert = "No response generated"
+                                    SpeechManager.shared.speak("No response generated")
+                                }
+                                
                                 self.isInferenceRunning = false
                                 self.sessionState = .ready
                                 self.checkForStuckBusyState()
+                                self.stopInferenceTimeout()
+                                self.isModeBusy = false  // Reset mode busy flag
                                 self.finishActiveMode()
                                 continuation.resume()
                                 self.processInferenceQueue()
@@ -507,31 +652,63 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
                         }
                     }
                 }
-            } onCancel: {
-                DispatchQueue.main.async {
-                    [weak self] in
-                    guard let self = self else { return }
-                    self.isInferenceRunning = false
-                    self.sessionState = .ready
-                    self.checkForStuckBusyState()
-                    self.finishActiveMode()
+                            } onCancel: {
+                    DispatchQueue.main.async {
+                        [weak self] in
+                        guard let self = self else { return }
+                        self.isInferenceRunning = false
+                        self.sessionState = .ready
+                        self.checkForStuckBusyState()
+                        self.stopInferenceTimeout()
+                        self.isModeBusy = false  // Reset mode busy flag
+                        self.finishActiveMode()
+                    }
                 }
+        }
+    }
+    
+    // MARK: - Timeout Management
+    private func startInferenceTimeout() {
+        stopInferenceTimeout()
+        inferenceTimeoutTimer = Timer.scheduledTimer(withTimeInterval: inferenceTimeout, repeats: false) { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.handleInferenceTimeout()
             }
         }
     }
     
+    private func stopInferenceTimeout() {
+        inferenceTimeoutTimer?.invalidate()
+        inferenceTimeoutTimer = nil
+    }
+    
+    private func handleInferenceTimeout() {
+        isInferenceRunning = false
+        sessionState = .ready
+        checkForStuckBusyState()
+        
+        if mode == .activeBusy {
+            currentAlert = "Inference timed out"
+            SpeechManager.shared.speak("Inference timed out")
+            finishActiveMode()
+        } else {
+            currentAlert = "Inference timed out"
+            SpeechManager.shared.speak("Inference timed out")
+        }
+        
+        processInferenceQueue()
+    }
+    
     // MARK: - Queue Processing
     private func processInferenceQueue() {
+        // Handle active requests first
         if let activeReq = pendingActiveRequest, !isInferenceRunning, sessionState == .ready {
             runActiveInferenceInternal(prompt: activeReq.prompt ?? "", image: activeReq.image)
             pendingActiveRequest = nil
             return
         }
         
-        if let activeReq = pendingActiveRequest, sessionState != .ready {
-            return
-        }
-        
+        // Handle passive requests
         guard !pendingInferenceQueue.isEmpty else { 
             return 
         }
@@ -542,11 +719,10 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
             return 
         }
         
-        let passiveRequests = pendingInferenceQueue.filter { !$0.isActive }
-        for request in passiveRequests {
-            pendingInferenceQueue.removeAll { $0.image == request.image && $0.isActive == false }
+        // Process the first passive request
+        if let request = pendingInferenceQueue.first {
+            pendingInferenceQueue.removeFirst()
             runPassiveInference(on: request.image)
-            return
         }
     }
     
@@ -582,6 +758,8 @@ class VisionAssistanceViewModel: ObservableObject, CameraManagerDelegate {
     deinit {
         _cameraManager?.stopSession()
     }
+    
+
 }
 
 // MARK: - Image Extensions

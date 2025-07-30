@@ -9,24 +9,8 @@ class VisionProcessor: ObservableObject {
     private var isProcessing: Bool = false
     
     private let combinedPrompt = """
-    You are an AI visual assistant for a blind user. Provide immediate, actionable alerts in 6 words or fewer.
-    General Cautions:
-    - Describe the obstacles in the scene in a way that is easy to understand for a blind user.
-    - Use simple, everyday language.
-
-    PRIORITIES (in order):
-    1. Moving hazards (vehicles, people, animals)
-    2. Ground obstacles (steps, holes, barriers)
-    3. Head-level dangers (branches, signs, overhangs)
-    4. Path guidance (left/right navigation cues)
-
-    RESPONSE FORMAT:
-    - if Immediate danger: "CAUTION [hazard] [direction]" 
-    - else if Ground hazards: "[Direction] [hazard]" 
-    - else if Navigation: "[Direction] CLEAR" or "CLEAR AHEAD"
-    - else if Safe path: "CLEAR"
-
-    Use simple, urgent language. No explanations.
+    You are an AI visual assistant for a blind user. Briefly describe the path ahead and any obstacle blocking forward movement. If there are no obstructions, say "CLEAR." Use simple, everyday words. Respond in 7 words or fewer.
+    some examples: curb, stairs, wall, person, pole, footpath, no obstacles, red DO NOT CROSS signal, green signal or safe crosswalk
     """
     
     init(chat: Chat) {
@@ -40,15 +24,16 @@ class VisionProcessor: ObservableObject {
             return (false, "No images provided")
         }
         
-        for (index, image) in images.enumerated() {
-            guard let cgImage = image.cgImage else {
-                return (false, "Image \(index) has invalid CGImage")
-            }
-            
-            let size = CGSize(width: cgImage.width, height: cgImage.height)
-            if size.width < 50 || size.height < 50 {
-                return (false, "Image \(index) too small: \(Int(size.width))x\(Int(size.height))")
-            }
+        // Only process the first image to prevent context corruption
+        let image = images.first!
+        
+        guard let cgImage = image.cgImage else {
+            return (false, "Image has invalid CGImage")
+        }
+        
+        let size = CGSize(width: cgImage.width, height: cgImage.height)
+        if size.width < 50 || size.height < 50 {
+            return (false, "Image too small: \(Int(size.width))x\(Int(size.height))")
         }
         
         let trimmedPrompt = prompt.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -76,11 +61,13 @@ class VisionProcessor: ObservableObject {
     // MARK: - Streaming inference for a batch of frames with custom prompt
     func processFramesStreaming(_ images: [UIImage], prompt: String, completion: @escaping (String, Bool) -> Void) {
         guard !isProcessing else {
+            print("⚠️ VisionProcessor: Already processing, ignoring request")
             completion("Error: Already processing", true)
             return
         }
         
         isProcessing = true
+        print("🔍 VisionProcessor: Starting processing, images count: \(images.count)")
         
         let validation = validateInputs(images: images, prompt: prompt)
         if !validation.isValid {
@@ -102,33 +89,50 @@ class VisionProcessor: ObservableObject {
             let outputStream = await analyzeFramesStreaming(images, prompt: prompt, mode: mode)
             var response = ""
             var hasError = false
+            var hasReceivedAnyOutput = false
             
             do {
                 for try await chunk in outputStream {
                     response += chunk
+                    
+                    // Track if we've received any meaningful output
+                    let trimmedChunk = chunk.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if !trimmedChunk.isEmpty {
+                        hasReceivedAnyOutput = true
+                    }
+                    
                     completion(response, false)
                 }
                 
                 if !hasError {
-                    completion(response, true)
+                    // Check if we got no meaningful output
+                    if !hasReceivedAnyOutput || response.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        completion("No response generated", true)
+                    } else {
+                        completion(response, true)
+                    }
                 }
             } catch {
                 hasError = true
                 
                 if (error.localizedDescription.contains("OUT_OF_RANGE") || 
                     error.localizedDescription.contains("exceed context window") ||
-                    error.localizedDescription.contains("current_step")) && retryCount < maxRetries {
+                    error.localizedDescription.contains("current_step") ||
+                    error.localizedDescription.contains("Roll back steps")) && retryCount < maxRetries {
                     
+                    print("🔄 VisionProcessor: Retrying after error: \(error.localizedDescription)")
                     chat?.markForSessionRecreation()
                     chat?.resetContext()
                     
                     processWithRetry(images: images, prompt: prompt, mode: mode, completion: completion, retryCount: retryCount + 1)
                     return
                 } else {
-                    completion("Processing error occurred", true)
+                    print("❌ VisionProcessor: Final error, not retrying: \(error.localizedDescription)")
+                    completion("Processing error occurred: \(error.localizedDescription)", true)
                 }
             }
             
+            print("✅ VisionProcessor: Processing completed, resetting flag")
             isProcessing = false
         }
     }
@@ -150,15 +154,25 @@ class VisionProcessor: ObservableObject {
         return AsyncThrowingStream { continuation in
             Task {
                 do {
-                    for (index, image) in images.enumerated() {
-                        let uprightImage = image.fixedOrientation()
-                        let squareImage = uprightImage.centerCroppedToSquare()
-                        
-                        if let cgImage = squareImage.cgImage {
-                            try chat.addImageToQuery(image: cgImage)
-                        } else {
-                            throw VisionProcessorError.invalidImageData
-                        }
+                    // Ensure we only process exactly one image
+                    guard images.count == 1 else {
+                        print("❌ VisionProcessor: Expected 1 image, got \(images.count)")
+                        throw VisionProcessorError.invalidInput
+                    }
+                    
+                    let image = images.first!
+                    let uprightImage = image.fixedOrientation()
+                    let squareImage = uprightImage.centerCroppedToSquare()
+                    
+                    print("🔍 VisionProcessor: Processing image, size: \(squareImage.size)")
+                    print("🔍 VisionProcessor: Using prompt: \(prompt)")
+                    
+                    if let cgImage = squareImage.cgImage {
+                        // Add image to query (context reset is handled by Chat class)
+                        try chat.addImageToQuery(image: cgImage)
+                        print("✅ VisionProcessor: Image added to query successfully")
+                    } else {
+                        throw VisionProcessorError.invalidImageData
                     }
                     
                     let stream = try await chat.sendMessage(prompt, mode: mode)
@@ -170,6 +184,7 @@ class VisionProcessor: ObservableObject {
                     continuation.finish()
                     
                 } catch {
+                    print("❌ VisionProcessor: Error during processing: \(error.localizedDescription)")
                     continuation.finish(throwing: error)
                 }
             }

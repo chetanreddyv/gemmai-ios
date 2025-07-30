@@ -22,9 +22,25 @@ class SpeechManager: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     // MARK: - TTS API
+    func speakStreaming(_ text: String, isFinal: Bool = false) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { 
+            return 
+        }
+        
+        if isFinal {
+            speak(trimmed)
+        }
+    }
+    
     func speak(_ text: String) {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
+        guard !trimmed.isEmpty else { 
+            return 
+        }
+        
+        // Ensure audio session is active
+        ensureAudioSessionIsActive()
         
         if synthesizer.isSpeaking {
             synthesizer.stopSpeaking(at: .immediate)
@@ -33,18 +49,10 @@ class SpeechManager: NSObject, AVSpeechSynthesizerDelegate {
         let utterance = AVSpeechUtterance(string: trimmed)
         utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
         utterance.rate = 0.5
+        utterance.volume = 1.0
         
         isSpeaking = true
         synthesizer.speak(utterance)
-    }
-    
-    func speakStreaming(_ text: String, isFinal: Bool = false) {
-        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        
-        if isFinal {
-            speak(trimmed)
-        }
     }
     
     private func setupAudioSession() {
@@ -53,7 +61,19 @@ class SpeechManager: NSObject, AVSpeechSynthesizerDelegate {
             try audioSession.setCategory(.playback, mode: .default, options: [.duckOthers, .interruptSpokenAudioAndMixWithOthers])
             try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
-            print("Failed to setup audio session: \(error)")
+            // Handle error silently
+        }
+    }
+    
+    private func ensureAudioSessionIsActive() {
+        let audioSession = AVAudioSession.sharedInstance()
+        if !audioSession.isOtherAudioPlaying {
+            do {
+                try audioSession.setCategory(.playback, mode: .default, options: [.duckOthers, .interruptSpokenAudioAndMixWithOthers])
+                try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+            } catch {
+                // Handle error silently
+            }
         }
     }
     
@@ -72,6 +92,8 @@ class SpeechManager: NSObject, AVSpeechSynthesizerDelegate {
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
         isSpeaking = false
     }
+    
+
     
     // MARK: - Speech Recognition (STT)
     func startRecognition() {

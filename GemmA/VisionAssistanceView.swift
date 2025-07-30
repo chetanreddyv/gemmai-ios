@@ -316,13 +316,17 @@ struct StartupView: View {
                             .foregroundColor(.teal)
                             .shadow(color: .teal.opacity(0.3), radius: 4, x: 0, y: 1)
                     }
+                    Text("by Chetan Valluru")
+                        .font(.caption)
+                        .foregroundColor(.white.opacity(0.6))
+                        .padding(.top, 4)
                 }
                 Spacer()
             }
             .padding(.horizontal, 32)
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("Loading GemmA.I, visual perception for the blind, powered by Gemma 3n")
+        .accessibilityLabel("Loading GemmA.I, visual perception for the blind, powered by Gemma 3n, by Chetan Valluru")
     }
 }
 
@@ -349,6 +353,8 @@ struct VisionSettingsView: View {
                             .foregroundColor(.secondary)
                     }
                 }
+                
+
                 
                 Section(header: Text("About")) {
                     Text("This app uses AI vision to detect hazards and obstacles, providing audio alerts to assist with navigation.")

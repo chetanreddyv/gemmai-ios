@@ -117,7 +117,7 @@ final class Chat {
         case passive, active
     }
     
-    init(model: OnDeviceModel, topK: Int = 20, topP: Float = 0.8, temperature: Float = 0.5, randomSeed: Int = 101, enableVisionModality: Bool = true) throws {
+    init(model: OnDeviceModel, topK: Int = 30, topP: Float = 0.8, temperature: Float = 0.6, randomSeed: Int = 101, enableVisionModality: Bool = true) throws {
         self.model = model
         self.topK = topK
         self.topP = topP
@@ -135,9 +135,14 @@ final class Chat {
     }
     
     public func resetContext() {
+        print("🔄 Chat: Resetting context, inference count: \(inferenceCount)")
         guard !isActivelyProcessing else {
+            print("⚠️ Chat: Cannot reset context - actively processing")
             return
         }
+        
+        // Add a small delay to ensure any ongoing operations complete
+        Thread.sleep(forTimeInterval: 0.1)
         
         let options = LlmInference.Session.Options()
         options.topk = topK
@@ -145,12 +150,21 @@ final class Chat {
         options.temperature = temperature
         options.enableVisionModality = enableVisionModality
         options.randomSeed = randomSeed
-        session = try! LlmInference.Session(llmInference: model.inference, options: options)
-        inferenceCount = 0
-        needsSessionRecreation = false
-        lastUsedParameters = (topK: topK, topP: topP, temperature: temperature, randomSeed: randomSeed)
         
-        Thread.sleep(forTimeInterval: 0.2)
+        do {
+            session = try LlmInference.Session(llmInference: model.inference, options: options)
+            inferenceCount = 0
+            needsSessionRecreation = false
+            lastUsedParameters = (topK: topK, topP: topP, temperature: temperature, randomSeed: randomSeed)
+            
+            // Add another small delay to ensure session is ready
+            Thread.sleep(forTimeInterval: 0.1)
+            print("✅ Chat: Context reset complete")
+        } catch {
+            // If session recreation fails, mark for recreation on next use
+            needsSessionRecreation = true
+            print("❌ Chat: Context reset failed: \(error.localizedDescription)")
+        }
     }
     
     public func markForSessionRecreation() {
@@ -162,90 +176,78 @@ final class Chat {
             return
         }
         
+        print("🔍 Chat: Checking inference count: \(inferenceCount)/\(maxInferencesBeforeReset)")
+        
         if inferenceCount >= maxInferencesBeforeReset {
+            print("🔄 Chat: Inference count limit reached, resetting context")
             resetContext()
         }
     }
     
     private func incrementInferenceCount() {
         inferenceCount += 1
+        print("📊 Chat: Inference count incremented to: \(inferenceCount)")
     }
     
-    func sendMessageSync(_ text: String, mode: InferenceMode = .passive) throws -> String {
-        isActivelyProcessing = true
-        defer { isActivelyProcessing = false }
-        
-        do {
-            try session.addQueryChunk(inputText: text)
-            let response = try session.generateResponse()
-            incrementInferenceCount()
-            return response
-        } catch {
-            resetContext()
-            try session.addQueryChunk(inputText: text)
-            let response = try session.generateResponse()
-            incrementInferenceCount()
-            return response
-        }
-    }
+
 
     public func addImageToQuery(image: CGImage) throws {
+        print("🔍 Chat: Adding image to query, inference count: \(inferenceCount)")
+        // Only reset context if we've reached the inference limit
         if !isActivelyProcessing {
             checkInferenceCountAndResetIfNeeded()
         }
         try self.session.addImage(image: image)
+        print("✅ Chat: Image added successfully")
     }
     
     func sendMessage(_ text: String, mode: InferenceMode = .passive) async throws -> AsyncThrowingStream<String, any Error> {
+        print("🔍 Chat: Sending message, text length: \(text.count), mode: \(mode)")
         isActivelyProcessing = true
         
         do {
             try session.addQueryChunk(inputText: text)
+            print("✅ Chat: Text added to query successfully")
             let resultStream = session.generateResponseAsync()
             
             return AsyncThrowingStream { continuation in
                 Task {
                     var accumulatedResponse = ""
+                    var hasReceivedAnyOutput = false
+                    
                     do {
                         for try await chunk in resultStream {
                             accumulatedResponse += chunk
+                            hasReceivedAnyOutput = true
                             continuation.yield(chunk)
                         }
-                        continuation.finish()
                         
+                        // Check if we got no meaningful output
+                        if !hasReceivedAnyOutput || accumulatedResponse.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            continuation.yield("No response generated")
+                        }
+                        
+                        continuation.finish()
                         self.incrementInferenceCount()
+                        
+                        // Reset isActivelyProcessing BEFORE attempting context reset
+                        self.isActivelyProcessing = false
+                        
+                        // Check if we need to reset context after completion
+                        if self.inferenceCount >= self.maxInferencesBeforeReset {
+                            print("🔄 Chat: Inference count limit reached, resetting context after completion")
+                            self.resetContext()
+                        }
                     } catch {
+                        print("❌ Chat: Error during response generation: \(error.localizedDescription)")
                         continuation.finish(throwing: error)
                     }
-                    self.isActivelyProcessing = false
                 }
             }
         } catch {
-            if error.localizedDescription.contains("Roll back steps") || 
-               error.localizedDescription.contains("current_step") {
-                // Handle MediaPipe internal errors
-            }
-            resetContext()
-            try session.addQueryChunk(inputText: text)
-            let resultStream = session.generateResponseAsync()
-            
-            return AsyncThrowingStream { continuation in
-                Task {
-                    var accumulatedResponse = ""
-                    do {
-                        for try await chunk in resultStream {
-                            accumulatedResponse += chunk
-                            continuation.yield(chunk)
-                        }
-                        continuation.finish()
-                        
-                        self.incrementInferenceCount()
-                    } catch {
-                        continuation.finish(throwing: error)
-                    }
-                    self.isActivelyProcessing = false
-                }
-            }
+            print("❌ Chat: Error adding text to query: \(error.localizedDescription)")
+            self.isActivelyProcessing = false  // Reset flag on error
+            throw error
         }
     }
 
