@@ -160,19 +160,21 @@ User Tap → Microphone Input (STT) + Frame Capture → Multimodal Prompt → Ge
 
 #### 4. Model Configuration
 ```swift
-topK: 20          // Deterministic, focused responses for safety
+topK: 30          // Balanced value preventing hallucination while maintaining detection
 topP: 0.8          // Restrictive output distribution
-temperature: 0.5   // Conservative randomness for reliability
+temperature: 0.6   // Conservative randomness for reliability
 randomSeed: 101    // Reproducible outputs
 maxTokens: 2048    // Context window for extensibility
 ```
 
 **Configuration Reasoning:**
-- **topK (0.5)**: Lower values produce more deterministic, focused responses ideal for safety-critical blind navigation
+- **topK (30)**: Balanced value preventing hallucination while maintaining hazard detection sensitivity
 - **topP (0.8)**: Restrictive output distribution focused on high-probability tokens for consistent instructions
-- **temperature (0.5)**: Conservative value reducing creative drift, ensuring reliable warnings and alerts
+- **temperature (0.6)**: Conservative value reducing creative drift, ensuring reliable warnings and alerts
 - **randomSeed (101)**: Fixed seed ensures reproducibility for demos, QA, and safety validation
 - **maxTokens (2048)**: High context window for future extensibility while maintaining real-time speed
+
+**Hardware Limitation:** MediaPipe library by Google AI Edge does not support GPU (Metal) for LLM inference on iOS yet, hence all inference runs on CPU, contributing to the observed latency.
 
 ### Prompt Engineering
 
